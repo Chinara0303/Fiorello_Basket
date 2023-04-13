@@ -1,0 +1,18 @@
+﻿@model Slider
+@{
+    ViewData["Title"] = "Detail";
+}
+
+<div class="container mt-5">
+    <h1>Slider Detail</h1>
+    <div class="img-detail">
+        <img class="img-fluid" src="~/img/@Model.Image"/>
+    </div>
+    <div class="back">
+        <a class="btn btn-primary btn-rounded btn-fw my-5" asp-action="Index">
+            <i class="mdi mdi-arrow-left-bold"></i>
+            Back to main page
+        </a>
+    </div>
+</div>
+
