@@ -38,12 +38,12 @@ $(document).ready(function () {
 
     $(document).on("submit", ".price form", function () {
         let id = $(this).attr("data-id");
+       
         $.ajax({
             type: "POST",
             url: `home/addbasket?id=${id}`,
             success: function (res) {
                 if (res.success == "true") {
-                    console.log("ok")
                 }
             }
         })
@@ -51,20 +51,39 @@ $(document).ready(function () {
 
     })
 
-    $(document).on("click", ".delete-product", function (e) {
-        e.preventDefault();
-      
-        let cookieArr = decodeURIComponent(document.cookie);
-        //console.log(cookieArr[0][0])
+    $(document).on("click", ".delete-product", function () {
+     
+        let id = $(this).parent().parent().attr("data-id");
+        let prod = $(this).parent().parent();
+        let tbody = $(".tbody").children()
+
         $.ajax({
             type: "Get",
-            url: "basket/delete/id",
-            success: function (res) {
-                console.log(res)
+            url: `Basket/DeleteDataFromBasket?id=${id}`,
+            success: function () {
+                $(prod).remove();
+                if ($(tbody).length == 0) {
+                    document.cookie.length = 0;
+                    $(".product-table").addClass("d-none");
+                    $(".footer-alert").removeClass("d-none")
+
+                }
+                grandTotal();
             }
         })
+      
 
     })
+    function grandTotal() {
+        let tbody = $(".tbody").children()
+        let sum = 0;
+        for (var prod of tbody) {
+            let price = parseFloat($(prod).children().eq(4).children().eq(1).text())
+            sum += price
+        }
+        $(".grand-total").text(sum);
+
+    }
     // HEADER
 
     $(document).on('click', '#search', function () {

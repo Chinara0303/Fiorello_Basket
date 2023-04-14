@@ -50,7 +50,7 @@ namespace Practice.Controllers
             return baskets;
         }
 
-        [ActionName("Delete")]
+        //[ActionName("Delete")]
         public IActionResult DeleteDataFromBasket(int? id)
         {
             if (id is null) return BadRequest();
@@ -61,7 +61,7 @@ namespace Practice.Controllers
 
             Response.Cookies.Append("basket", JsonConvert.SerializeObject(baskets));
 
-            return RedirectToAction("index");
+            return Ok();
         }
     }
 }

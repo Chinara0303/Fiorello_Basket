@@ -6,79 +6,88 @@
 }
     
 <div class="container my-5">
-    @if(Model.Count > 0)
-    {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Image</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Count</th>
-                    <th scope="col">Total</th>
-                    <th scope="col">Options</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
+    @if(Model.Count>0){
+        <div class="product-table ">
+            <table class="table ">
+                <thead>
                     <tr>
-                        <td>
-                            <div class="img" style="width:100px; height:100px;">
-                                <img style="width:100%; height:100%;" src="~/img/@item.Image" />
-                            </div>
-                        </td>
-                        <td>
-                            @item.Name
-                        </td>
-                        <td>
-                            $@item.Price
-                        </td>
-                        <td>
-                            <div class="product-count">
-                                <span class="decrement"><i class="fa-solid fa-minus"></i></span>
-                                <span style="font-size:20px;">@item.Count</span>
-                                <span class="increment"><i class="fa-solid fa-plus"></i></span>
-                            </div>
-                           
-                        </td>
-                        <td>
-                            $@item.Total
-                        </td>
-                        <td> <a asp-controller="Basket" asp-action="Delete" asp-route-id="@item.Id" class="text-danger delete-product"><i class="fa-solid fa-trash"></i></a></td>
-
+                        <th scope="col">Image</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Count</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Options</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-        <div class="footer d-flex align-items-center justify-content-between">
-            <a asp-controller="Home" asp-action="Index"><button>Continue Shopping</button> </a>
-            <div class="footer-right">
-               
-                <span class="total-price">$
+                </thead>
+                <tbody class="tbody">
                     @foreach (var item in Model)
                     {
-                        grandTotal += item.Total;
+                        <tr data-id="@item.Id" class="product">
+                            <td>
+                                <div class="img" style="width:100px; height:100px;">
+                                    <img style="width:100%; height:100%;" src="~/img/@item.Image" />
+                                </div>
+                            </td>
+                            <td>
+                                @item.Name
+                            </td>
+                            <td>
+                                <span>$</span>
+                                <span>
+                                    @item.Price
+                                </span>
+                            </td>
+                            <td>
+                                <div class="product-count">
+                                    <span class="decrement"><i class="fa-solid fa-minus"></i></span>
+                                    <span style="font-size:20px;">@item.Count</span>
+                                    <span class="increment"><i class="fa-solid fa-plus"></i></span>
+                                </div>
 
+                            </td>
+                            <td>
+                                <span>$</span>
+                                <span>@item.Total</span>
+                            </td>
+                            <td><a style="cursor:pointer" class="text-danger delete-product"><i class="fa-solid fa-trash"></i></a></td>
+
+                        </tr>
                     }
-                    @grandTotal
-                </span>
-                <a href="checkout.html"><button class="checkout">Proceed To Checkout</button></a>
+
+                </tbody>
+
+            </table>
+            <div class="footer d-flex align-items-center justify-content-between">
+                <a asp-controller="Home" asp-action="Index"><button>Continue Shopping</button> </a>
+                <div class="footer-right">
+
+                    <span class="total-price">
+                        <span>$</span>
+                        @foreach (var item in Model)
+                        {
+                            grandTotal += item.Total;
+                        }
+                        <span class="grand-total">@grandTotal</span>
+                    </span>
+                    <a href="checkout.html"><button class="checkout">Proceed To Checkout</button></a>
+                </div>
             </div>
         </div>
 
     }
-    else{
-        <div class="alert alert-warning" role="alert">
-            There are no products in the cart.
-        </div>
-        <div class="footer d-flex align-items-center justify-content-between">
-            <a asp-controller="Home" asp-action="Index"><button>Continue Shopping</button> </a>
-            <div class="footer-right">
-                <a href="checkout.html"><button class="checkout">Proceed To Checkout</button></a>
+    else
+    {
+        <div class="footer-alert">
+            <div class="alert alert-warning" role="alert">
+                There are no products in the cart.
+            </div>
+            <div class="footer d-flex align-items-center justify-content-between">
+                <a asp-controller="Home" asp-action="Index"><button>Continue Shopping</button> </a>
+                <div class="footer-right">
+                    <a href="checkout.html"><button class="checkout">Proceed To Checkout</button></a>
+                </div>
             </div>
         </div>
     }
-
     
 </div>
