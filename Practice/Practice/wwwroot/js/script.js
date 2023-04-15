@@ -36,44 +36,64 @@ $(document).ready(function () {
         })
     })
 
+    checkAlert();
+    function checkAlert() {
+        const cookieValue = decodeURIComponent(document.cookie.split('=')[1])
+        if (cookieValue == "[]") {
+            $(".footer-alert").removeClass("d-none");
+        }
+        else {
+            $(".footer-alert").addClass("d-none");
+        }
+    }
+  
+
     $(document).on("submit", ".price form", function () {
         let id = $(this).attr("data-id");
-       
         $.ajax({
             type: "POST",
             url: `home/addbasket?id=${id}`,
             success: function (res) {
+               
                 if (res.success == "true") {
+                    return res;
                 }
             }
         })
+
         return false;
 
     })
-
     $(document).on("click", ".delete-product", function () {
-     
+        
         let id = $(this).parent().parent().attr("data-id");
         let prod = $(this).parent().parent();
-        let tbody = $(".tbody").children()
+        let tbody = $(".tbody").children();
 
         $.ajax({
             type: "Get",
             url: `Basket/DeleteDataFromBasket?id=${id}`,
-            success: function () {
-                $(prod).remove();
-                if ($(tbody).length == 0) {
-                    document.cookie.length = 0;
+            success: function (res) {
+              
+                //for (var i = 0; i < res.length; i++) {
+                //    for (var prod in tbody) {
+                //        if (res[i].Id == $(prod).attr("data-id")) {
+                //            $(tbody).append(res)
+                //        }
+                //    }
+                //}
+                if ($(tbody).length == 1) {
                     $(".product-table").addClass("d-none");
                     $(".footer-alert").removeClass("d-none")
-
                 }
+                $(prod).remove();
                 grandTotal();
             }
         })
       
 
     })
+
     function grandTotal() {
         let tbody = $(".tbody").children()
         let sum = 0;
@@ -81,11 +101,52 @@ $(document).ready(function () {
             let price = parseFloat($(prod).children().eq(4).children().eq(1).text())
             sum += price
         }
-        $(".grand-total").text(sum);
-
+        $(".grand-total").text(sum+".00");
     }
-    // HEADER
 
+    $(document).on("click", ".increment", function () {
+        let id = $(this).parent().parent().parent().attr("data-id");
+        let nativePrice = parseFloat($(this).parent().parent().prev().children().eq(1).text());
+        let total = $(this).parent().parent().next().children().eq(1);
+        let count = $(this).prev();
+
+        $.ajax({
+            type: "Get",
+            url: `Basket/IncrementProductCount?id=${id}`,
+            success: function (res) {
+                res++;
+                $(count).text(res);
+                let subtotal = nativePrice * parseFloat(count.text());
+                $(total).text(subtotal + ".00");
+                grandTotal();
+            }
+        })
+    })
+    $(document).on("click", ".decrement", function () {
+        let id = $(this).parent().parent().parent().attr("data-id");
+        let nativePrice = parseFloat($(this).parent().parent().prev().children().eq(1).text());
+        let total = $(this).parent().parent().next().children().eq(1);
+        let count = $(this).next();
+
+        $.ajax({
+            type: "Get",
+            url: `Basket/DecrementProductCount?id=${id}`,
+            success: function (res) {
+                if ($(count).text() == 1) {
+                    return;
+                }
+                res--;
+                $(count).text(res);
+                let subtotal = nativePrice * parseFloat(count.text());
+                $(total).text(subtotal + ".00");
+                grandTotal();
+            }
+        })
+    })
+
+
+
+    // HEADER
     $(document).on('click', '#search', function () {
         $(this).next().toggle();
     })

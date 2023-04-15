@@ -82,13 +82,13 @@ namespace Practice.Controllers
 
             return Ok();
         }
-        private async Task<Product> GetProductById(int id)
+        public async Task<Product> GetProductById(int id)
         {
             return await _context.Products.FindAsync(id);
         }
         private List<BasketVM> GetDatasFromCookie()
         {
-            List<BasketVM> baskets;
+            List<BasketVM> baskets ;
 
             if (Request.Cookies["basket"] != null)
             {

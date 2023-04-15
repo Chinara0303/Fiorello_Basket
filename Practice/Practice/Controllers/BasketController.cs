@@ -50,7 +50,6 @@ namespace Practice.Controllers
             return baskets;
         }
 
-        //[ActionName("Delete")]
         public IActionResult DeleteDataFromBasket(int? id)
         {
             if (id is null) return BadRequest();
@@ -61,7 +60,28 @@ namespace Practice.Controllers
 
             Response.Cookies.Append("basket", JsonConvert.SerializeObject(baskets));
 
-            return Ok();
+            return Ok(baskets);
+        }
+
+        public IActionResult IncrementProductCount(int? id)
+        {
+            if (id is null) return BadRequest();
+            var baskets = JsonConvert.DeserializeObject<List<BasketVM>>(Request.Cookies["basket"]);
+           var count =  baskets.FirstOrDefault(b => b.Id == id).Count++;
+            
+            Response.Cookies.Append("basket", JsonConvert.SerializeObject(baskets));
+
+            return Ok(count);
+        }
+        public IActionResult DecrementProductCount(int? id)
+        {
+            if (id is null) return BadRequest();
+            var baskets = JsonConvert.DeserializeObject<List<BasketVM>>(Request.Cookies["basket"]);
+            var count = baskets.FirstOrDefault(b => b.Id == id).Count--;
+
+            Response.Cookies.Append("basket", JsonConvert.SerializeObject(baskets));
+
+            return Ok(count);
         }
     }
 }
