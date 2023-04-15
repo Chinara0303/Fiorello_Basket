@@ -2,8 +2,8 @@
 
 @foreach (var product in Model)
 {
-    <div class="col-sm-6 col-md-4 col-lg-3 mt-3">
-        <div class="product-item product-item-small text-center">
+    <div class="col-sm-6 col-md-4 col-lg-3 mt-3" >
+        <div class="product-item product-item-small text-center " >
             <div class="img">
                 <a href="">
                     <img src="~/img/@product.Images.FirstOrDefault()?.Image" class="img-fluid" alt="">
@@ -17,7 +17,9 @@
                     <span class="text-black-50">$@product.Price</span>
                 </div>
                 <div class="button mt-3">
-                    <button class="btn btn-danger rounded-0">Add to cart</button>
+                    <form method="post" data-id="@product.Id">
+                      <button class="btn btn-danger rounded-0">Add to cart</button>
+                    </form>
                 </div>
             </div>
         </div>

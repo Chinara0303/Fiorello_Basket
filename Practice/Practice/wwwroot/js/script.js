@@ -1,5 +1,28 @@
 $(document).ready(function () {
+    //calculate grand total
+    function grandTotal() {
+        let tbody = $(".tbody").children()
+        let sum = 0;
+        for (var prod of tbody) {
+            let price = parseFloat($(prod).children().eq(4).children().eq(1).text())
+            sum += price
+        }
+        $(".grand-total").text(sum + ".00");
+    }
 
+    //check cookie
+    checkCookie()
+    function checkCookie() {
+        const cookieValue = decodeURIComponent(document.cookie.split('=')[1])
+        if (cookieValue == "[]") {
+            $(".footer-alert").removeClass("d-none");
+        }
+        else {
+            $(".footer-alert").addClass("d-none");
+        }
+    }
+
+    //show more function
     $(document).on("click", ".show-more", function () {
         let skipCount = $(".parent-products").children().length;
         let dataCount = $(".parent-products").attr("data-count");
@@ -19,6 +42,7 @@ $(document).ready(function () {
         })
     })
 
+    //show less function
     $(document).on("click", ".show-less", function () {
         let skipCount = 0;
 
@@ -36,34 +60,35 @@ $(document).ready(function () {
         })
     })
 
-    checkAlert();
-    function checkAlert() {
-        const cookieValue = decodeURIComponent(document.cookie.split('=')[1])
-        if (cookieValue == "[]") {
-            $(".footer-alert").removeClass("d-none");
-        }
-        else {
-            $(".footer-alert").addClass("d-none");
-        }
-    }
-  
-
+    //add product to basket in home page
     $(document).on("submit", ".price form", function () {
         let id = $(this).attr("data-id");
         $.ajax({
             type: "POST",
             url: `home/addbasket?id=${id}`,
-            success: function (res) {
-               
-                if (res.success == "true") {
-                    return res;
-                }
+            success: function () {
+                return ok();
             }
         })
 
         return false;
 
     })
+    //add product to basket in shop page
+    $(document).on("submit", ".button form", function () {
+        let id = $(this).attr("data-id");
+        $.ajax({
+            type: "POST",
+            url: `shop/addbasket?id=${id}`,
+            success: function () {
+                return ok();
+            }
+        })
+
+        return false;
+
+    })
+    //delete product from basket
     $(document).on("click", ".delete-product", function () {
         
         let id = $(this).parent().parent().attr("data-id");
@@ -94,17 +119,9 @@ $(document).ready(function () {
 
     })
 
-    function grandTotal() {
-        let tbody = $(".tbody").children()
-        let sum = 0;
-        for (var prod of tbody) {
-            let price = parseFloat($(prod).children().eq(4).children().eq(1).text())
-            sum += price
-        }
-        $(".grand-total").text(sum+".00");
-    }
-
+    //change product count
     $(document).on("click", ".increment", function () {
+        console.log("shs")
         let id = $(this).parent().parent().parent().attr("data-id");
         let nativePrice = parseFloat($(this).parent().parent().prev().children().eq(1).text());
         let total = $(this).parent().parent().next().children().eq(1);
@@ -137,7 +154,7 @@ $(document).ready(function () {
                 }
                 res--;
                 $(count).text(res);
-                let subtotal = nativePrice * parseFloat(count.text());
+                let subtotal = nativePrice * parseFloat($(count).text());
                 $(total).text(subtotal + ".00");
                 grandTotal();
             }

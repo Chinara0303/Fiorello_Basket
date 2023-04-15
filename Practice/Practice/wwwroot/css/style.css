@@ -11,12 +11,15 @@ body {
 }
 .decrement,.increment{
     cursor: pointer;
+    user-select:none;
+}
+.prod-count {
+    user-select: none;
 }
 ::-moz-selection {
   background-color: #f34f3f;
   color: #fff;
 }
-
 
 ::selection {
   background-color: #f34f3f;

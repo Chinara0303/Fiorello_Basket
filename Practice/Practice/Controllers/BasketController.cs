@@ -67,7 +67,7 @@ namespace Practice.Controllers
         {
             if (id is null) return BadRequest();
             var baskets = JsonConvert.DeserializeObject<List<BasketVM>>(Request.Cookies["basket"]);
-           var count =  baskets.FirstOrDefault(b => b.Id == id).Count++;
+            var count =  baskets.FirstOrDefault(b => b.Id == id).Count++;
             
             Response.Cookies.Append("basket", JsonConvert.SerializeObject(baskets));
 
