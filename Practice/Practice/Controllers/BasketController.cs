@@ -77,12 +77,12 @@ namespace Practice.Controllers
         {
             if (id is null) return BadRequest();
             var baskets = JsonConvert.DeserializeObject<List<BasketVM>>(Request.Cookies["basket"]);
-            var dbProduct = (baskets.FirstOrDefault(b => b.Id == id));
-            if(dbProduct.Count == 1)
+            var product = (baskets.FirstOrDefault(b => b.Id == id));
+            if(product.Count == 1)
             {
                 return Ok();
             }
-            var count = dbProduct.Count--;
+            var count = product.Count--;
             Response.Cookies.Append("basket", JsonConvert.SerializeObject(baskets));
 
             return Ok(count);

@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    //calculate grand total
+    //calculate grand and sub total
     function grandTotal() {
         let tbody = $(".tbody").children()
         let sum = 0;
@@ -10,12 +10,17 @@ $(document).ready(function () {
         }
         $(".grand-total").text(sum + ".00");
     }
+    function subTotal(res, nativePrice, total, count) {
+        $(count).text(res);
+        let subtotal = nativePrice * parseFloat($(count).text());
+        $(total).text(subtotal + ".00");
+    }
 
     //check cookie
     checkCookie()
     function checkCookie() {
         const cookieValue = decodeURIComponent(document.cookie.split('=')[1])
-        if (cookieValue == "[]") {
+        if (cookieValue == "[]" || !document.cookie.includes("basket") ) {
             $(".footer-alert").removeClass("d-none");
         }
         else {
@@ -65,30 +70,20 @@ $(document).ready(function () {
     $(document).on("submit", ".price form", function () {
         let id = $(this).attr("data-id");
         $.ajax({
-            type: "POST",
+            type: "Post",
             url: `home/addbasket?id=${id}`,
-            success: function () {
-                return ok();
-            }
         })
-
         return false;
-
     })
 
     //add product to basket in shop page
     $(document).on("submit", ".button form", function () {
         let id = $(this).attr("data-id");
         $.ajax({
-            type: "POST",
+            type: "Post",
             url: `shop/addbasket?id=${id}`,
-            //success: function () {
-            //    return ;
-            //}
         })
-
         return false;
-
     })
 
     //delete product from basket
@@ -101,15 +96,7 @@ $(document).ready(function () {
         $.ajax({
             type: "Get",
             url: `Basket/DeleteDataFromBasket?id=${id}`,
-            success: function (res) {
-              
-                //for (var i = 0; i < res.length; i++) {
-                //    for (var prod in tbody) {
-                //        if (res[i].Id == $(prod).attr("data-id")) {
-                //            $(tbody).append(res)
-                //        }
-                //    }
-                //}
+            success: function () {
                 if ($(tbody).length == 1) {
                     $(".product-table").addClass("d-none");
                     $(".footer-alert").removeClass("d-none")
@@ -118,14 +105,10 @@ $(document).ready(function () {
                 grandTotal();
             }
         })
-      
-
     })
 
     //change product count
     $(document).on("click", ".increment", function () {
-        debugger
-        console.log("shs")
         let id = $(this).parent().parent().parent().attr("data-id");
         let nativePrice = parseFloat($(this).parent().parent().prev().children().eq(1).text());
         let total = $(this).parent().parent().next().children().eq(1);
@@ -136,16 +119,13 @@ $(document).ready(function () {
             url: `Basket/IncrementProductCount?id=${id}`,
             success: function (res) {
                 res++;
-                $(count).text(res);
-                let subtotal = nativePrice * parseFloat(count.text());
-                $(total).text(subtotal + ".00");
+                subTotal(res, nativePrice, total, count)
                 grandTotal();
             }
         })
     })
 
     $(document).on("click", ".decrement", function () {
-        debugger
         let id = $(this).parent().parent().parent().attr("data-id");
         let nativePrice = parseFloat($(this).parent().parent().prev().children().eq(1).text());
         let total = $(this).parent().parent().next().children().eq(1);
@@ -159,9 +139,7 @@ $(document).ready(function () {
                     return;
                 }
                 res--;
-                $(count).text(res);
-                let subtotal = nativePrice * parseFloat($(count).text());
-                $(total).text(subtotal + ".00");
+                subTotal(res,nativePrice,total,count)
                 grandTotal();
             }
         })
@@ -179,7 +157,6 @@ $(document).ready(function () {
             }
         })
     })
-    
 
 
     // HEADER
