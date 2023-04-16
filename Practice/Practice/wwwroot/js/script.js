@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
     //calculate grand total
     function grandTotal() {
         let tbody = $(".tbody").children()
@@ -74,20 +75,22 @@ $(document).ready(function () {
         return false;
 
     })
+
     //add product to basket in shop page
     $(document).on("submit", ".button form", function () {
         let id = $(this).attr("data-id");
         $.ajax({
             type: "POST",
             url: `shop/addbasket?id=${id}`,
-            success: function () {
-                return ok();
-            }
+            //success: function () {
+            //    return ;
+            //}
         })
 
         return false;
 
     })
+
     //delete product from basket
     $(document).on("click", ".delete-product", function () {
         
@@ -121,6 +124,7 @@ $(document).ready(function () {
 
     //change product count
     $(document).on("click", ".increment", function () {
+        debugger
         console.log("shs")
         let id = $(this).parent().parent().parent().attr("data-id");
         let nativePrice = parseFloat($(this).parent().parent().prev().children().eq(1).text());
@@ -139,7 +143,9 @@ $(document).ready(function () {
             }
         })
     })
+
     $(document).on("click", ".decrement", function () {
+        debugger
         let id = $(this).parent().parent().parent().attr("data-id");
         let nativePrice = parseFloat($(this).parent().parent().prev().children().eq(1).text());
         let total = $(this).parent().parent().next().children().eq(1);
@@ -161,6 +167,19 @@ $(document).ready(function () {
         })
     })
 
+    //search
+    $(document).on("keyup", "#input-search", function () {
+        let value = $("#input-search").val();
+        $("#search-list li").slice(1).remove();
+        $.ajax({
+            type: "Get",
+            url: `shop/search?searchText=${value}`,
+            success: function (res) {
+                $("#search-list").append(res)
+            }
+        })
+    })
+    
 
 
     // HEADER

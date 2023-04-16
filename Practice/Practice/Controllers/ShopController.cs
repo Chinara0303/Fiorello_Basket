@@ -100,5 +100,20 @@ namespace Practice.Controllers
             Response.Cookies.Append("basket", JsonConvert.SerializeObject(baskets));
 
         }
+        public async Task<IActionResult> Search(string searchText)
+        {
+            if (String.IsNullOrWhiteSpace(searchText))
+            {
+                return Ok();
+            }
+            var products = await _context.Products
+                .Include(p => p.Images)
+                .Include(p => p.Category)
+                .OrderByDescending(p=>p.Id)
+                .Where(p => p.Name.ToLower().Contains(searchText.ToLower()) 
+                               || p.Category.Name.ToLower().Contains(searchText.ToLower()))
+                .ToListAsync();
+            return PartialView("_SearchPartial",products);
+        }
     }
 }
