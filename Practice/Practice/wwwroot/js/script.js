@@ -72,6 +72,15 @@ $(document).ready(function () {
         $.ajax({
             type: "Post",
             url: `home/addbasket?id=${id}`,
+            success: function () {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Product added to basket',
+                    showConfirmButton: false,
+                    timer: 1000
+                })
+            }
         })
         return false;
     })
@@ -82,6 +91,15 @@ $(document).ready(function () {
         $.ajax({
             type: "Post",
             url: `shop/addbasket?id=${id}`,
+            success: function () {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Product added to basket',
+                    showConfirmButton: false,
+                    timer: 1000
+                })
+            }
         })
         return false;
     })
@@ -97,12 +115,31 @@ $(document).ready(function () {
             type: "Get",
             url: `Basket/DeleteDataFromBasket?id=${id}`,
             success: function () {
-                if ($(tbody).length == 1) {
-                    $(".product-table").addClass("d-none");
-                    $(".footer-alert").removeClass("d-none")
-                }
-                $(prod).remove();
-                grandTotal();
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                   
+                    if (result.isConfirmed) {
+                        if ($(tbody).length == 1) {
+                            $(".product-table").addClass("d-none");
+                            $(".footer-alert").removeClass("d-none")
+                        }
+                        $(prod).remove();
+                        grandTotal();
+                        Swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+                    }
+                })
+               
             }
         })
     })
